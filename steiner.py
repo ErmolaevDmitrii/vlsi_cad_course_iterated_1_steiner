@@ -860,6 +860,9 @@ def main():
                         help='Выполнить проверку результата после построения')
     args = parser.parse_args()
 
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    base_name  = os.path.splitext(os.path.basename(args.input_file))[0]
+
     vertexes = load_vertexes(args.input_file)
 
     assert vertexes, f"Вершины не были загружены"
@@ -903,12 +906,12 @@ def main():
     print(f"Ребер: {len(tree.edges_list)}")
     print(f"{'='*50}\n")
 
-    out_name = args.output if args.output else os.path.splitext(args.input_file)[0] + '_out.json'
+    out_name = args.output if args.output else os.path.join(script_dir, f"{base_name}_out.json")
     save_tree_to_json(tree, out_name)
     print(f"Сохранено в {out_name}")
 
     if args.visualize:
-        img_name = os.path.splitext(args.input_file)[0] + '_out.png'
+        img_name = os.path.join(script_dir, f"{base_name}_out.png")
         fig, ax = tree.visualise()
         fig.savefig(img_name, dpi=150, bbox_inches='tight')
         plt.close(fig)
